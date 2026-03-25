@@ -1,0 +1,48 @@
+{
+  "name": "patter-hub-automation",
+  "version": "2.0.0",
+  "description": "Automated testing suite for Patter Hub - Admin & Super Admin flows",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js",
+    "test:headed": "cross-env HEADED=true cucumber-js",
+    "test:admin": "cucumber-js --tags \"@admin and not @otp\"",
+    "test:superadmin": "cucumber-js --tags \"@superadmin\"",
+    "test:smoke": "cucumber-js --tags \"@smoke\"",
+    "test:ci": "cucumber-js --tags \"not @wip\" --format json:reports/cucumber-report.json",
+    "test:quick": "ts-node quick-test.ts",
+    "setup:windows": "npm install && npx playwright install",
+    "setup": "bash setup.sh",
+    "clean:windows": "if exist reports rmdir /s /q reports && if exist screenshots rmdir /s /q screenshots && if exist videos rmdir /s /q videos && mkdir reports && mkdir screenshots && mkdir videos",
+    "clean": "rm -rf reports/* screenshots/* videos/*",
+    "lint": "eslint . --ext .ts",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "playwright",
+    "cucumber",
+    "e2e",
+    "testing",
+    "automation",
+    "patter",
+    "qa"
+  ],
+  "author": "Daniel Ortiz - Senior QA Engineer",
+  "license": "ISC",
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.3.1",
+    "@playwright/test": "^1.41.0",
+    "@types/node": "^20.11.5",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "cross-env": "^7.0.3",
+    "cucumber-html-reporter": "^7.1.1",
+    "dotenv": "^16.4.1",
+    "eslint": "^8.56.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "winston": "^3.11.0"
+  }
+}
