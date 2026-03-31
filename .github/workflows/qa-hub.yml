@@ -25,6 +25,8 @@ jobs:
           node-version: '18'
       - run: npm install
       - name: Run tests US
+        run: npx playwright install chromium --with-deps
+      - name: Run tests US
         env:
           NODE_ENV: us
           BASE_URL: ${{ secrets.BASE_URL }}
@@ -51,6 +53,8 @@ jobs:
           node-version: '18'
       - run: npm install
       - name: Run tests Canada
+        run: npx playwright install chromium --with-deps
+      - name: Run tests US
         env:
           NODE_ENV: canada
           CANADA_URL: ${{ secrets.CANADA_URL }}
