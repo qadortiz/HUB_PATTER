@@ -1,0 +1,86 @@
+name: QA Hub Automation
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente de ejecución'
+        required: true
+        default: 'us'
+        type: choice
+        options:
+          - us
+          - canada
+          - both
+
+jobs:
+  qa-us:
+    name: 🌐 Patter Hub — US Production
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.environment == 'us' || github.event.inputs.environment == 'both' }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests — US Production
+        env:
+          NODE_ENV: us
+          BASE_URL: ${{ secrets.BASE_URL }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          SUPERADMIN_EMAIL: ${{ secrets.SUPERADMIN_EMAIL }}
+          SUPERADMIN_PASSWORD: ${{ secrets.SUPERADMIN_PASSWORD }}
+          TARGET_ORG: ${{ secrets.TARGET_ORG }}
+          MAILINATOR_API_KEY: ${{ secrets.MAILINATOR_API_KEY }}
+        run: npx cucumber-js --format json:reports/us-report.json --format html:reports/us-report.html
+
+      - name: Upload US report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-report-us
+          path: reports/us-report.html
+
+  qa-canada:
+    name: 🌐 Patter Hub — Canada Production
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.environment == 'canada' || github.event.inputs.environment == 'both' }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests — Canada Production
+        env:
+          NODE_ENV: canada
+          CANADA_URL: ${{ secrets.CANADA_URL }}
+          CANADA_ADMIN_EMAIL: ${{ secrets.CANADA_ADMIN_EMAIL }}
+          CANADA_ADMIN_PASSWORD: ${{ secrets.CANADA_ADMIN_PASSWORD }}
+          CANADA_SUPERADMIN_EMAIL: ${{ secrets.CANADA_SUPERADMIN_EMAIL }}
+          CANADA_SUPERADMIN_PASSWORD: ${{ secrets.CANADA_SUPERADMIN_PASSWORD }}
+          CANADA_TARGET_ORG: ${{ secrets.CANADA_TARGET_ORG }}
+        run: npx cucumber-js --format json:reports/canada-report.json --format html:reports/canada-report.html
+
+      - name: Upload Canada report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-report-canada
+          path: reports/canada-report.html
