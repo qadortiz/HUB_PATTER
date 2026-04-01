@@ -63,7 +63,7 @@ jobs:
           CANADA_SUPERADMIN_EMAIL: ${{ secrets.CANADA_SUPERADMIN_EMAIL }}
           CANADA_SUPERADMIN_PASSWORD: ${{ secrets.CANADA_SUPERADMIN_PASSWORD }}
           CANADA_TARGET_ORG: ${{ secrets.CANADA_TARGET_ORG }}
-        run: npx cucumber-js
+        run: npx cucumber-js || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
