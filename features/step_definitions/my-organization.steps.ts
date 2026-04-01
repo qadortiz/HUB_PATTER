@@ -4,8 +4,7 @@ import { CustomWorld } from '../../src/support/world';
 import { Logger } from '../../src/utils/Logger';
 import path from 'path';
 
-const IMAGE_PATH = 'C:\\Users\\SANIE\\Downloads\\hosfeltgallery-jean-michel-basquiat-untitled-1985 (1).jpg';
-
+const IMAGE_PATH = path.join(process.cwd(), 'Screenshot_108.png');
 // =============================================================================
 // WHEN Steps - Acciones
 // =============================================================================
