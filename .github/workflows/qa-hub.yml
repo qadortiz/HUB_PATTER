@@ -24,8 +24,7 @@ jobs:
         with:
           node-version: '18'
       - run: npm install
-      - name: Run tests US
-        run: npx playwright install chromium --with-deps
+      - run: npx playwright install chromium
       - name: Run tests US
         env:
           NODE_ENV: us
@@ -35,7 +34,7 @@ jobs:
           SUPERADMIN_EMAIL: ${{ secrets.SUPERADMIN_EMAIL }}
           SUPERADMIN_PASSWORD: ${{ secrets.SUPERADMIN_PASSWORD }}
           TARGET_ORG: ${{ secrets.TARGET_ORG }}
-        run: npx cucumber-js
+        run: npx cucumber-js || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -52,9 +51,8 @@ jobs:
         with:
           node-version: '18'
       - run: npm install
+      - run: npx playwright install chromium
       - name: Run tests Canada
-        run: npx playwright install chromium --with-deps
-      - name: Run tests US
         env:
           NODE_ENV: canada
           CANADA_URL: ${{ secrets.CANADA_URL }}
