@@ -283,22 +283,18 @@ Then('el usuario debería ver la página de verificación OTP', { timeout: 12000
   expect(otpVisible).toBeTruthy();
   Logger.info('✓ Página de verificación OTP visible (4 campos detectados)');
 });
-
-  Then('el usuario debería ver un mensaje de error', { timeout: 60000 }, async function (this: CustomWorld) {
-  await this.page.waitForTimeout(5000);
+Then('el usuario debería ver un mensaje de error', { timeout: 60000 }, async function (this: CustomWorld) {
+  // Esperar activamente a que aparezca el toast de error
+  const errorLocator = this.page.locator('text=User not found, text=Invalid credentials, text=Invalid code, [role="alert"], [class*="error"]').first();
   
-  const errorVisible = 
-    await this.page.locator('text=User not found').isVisible().catch(() => false) ||
-    await this.page.locator('text=Invalid credentials').isVisible().catch(() => false) ||
-    await this.page.locator('text=Invalid code').isVisible().catch(() => false) ||
-    await this.page.locator('text=incorrect').isVisible().catch(() => false) ||
-    await this.page.locator('text=invalid').isVisible().catch(() => false) ||
-    await this.page.locator('text=wrong').isVisible().catch(() => false) ||
-    await this.page.locator('text=error').isVisible().catch(() => false) ||
-    await this.page.locator('[role="alert"]').isVisible().catch(() => false) ||
-    await this.page.locator('[class*="error"]').isVisible().catch(() => false) ||
-    await this.page.locator('[class*="Error"]').isVisible().catch(() => false) ||
-    await this.page.locator('[data-testid*="error"]').isVisible().catch(() => false);
+  const errorVisible = await this.page.waitForSelector(
+    'text=User not found, text=Invalid credentials, [role="alert"]',
+    { timeout: 15000, state: 'visible' }
+  ).then(() => true).catch(() => false);
+
+  expect(errorVisible).toBeTruthy();
+  Logger.info('✓ Mensaje de error visible');
+});
   
   expect(errorVisible).toBeTruthy();
   Logger.info('✓ Mensaje de error visible');
